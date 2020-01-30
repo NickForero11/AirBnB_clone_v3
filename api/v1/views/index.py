@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """Module to handle the status endpoint for the REST API.
 """
 from api.v1.views import app_views
