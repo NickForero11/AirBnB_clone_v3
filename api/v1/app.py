@@ -1,12 +1,15 @@
 #!/usr/bin/python3
 """Module that starts a Flask app that handles the REST API."""
 from flask import (Flask, jsonify)
+from flask_cors import CORS
 from models import storage
 from api.v1.views import app_views
 from os import getenv
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
+cors_conf = {'resources': r'/*', 'origins': '0.0.0.0'}
+CORS(app, **cors_conf)
 
 
 @app.teardown_appcontext
