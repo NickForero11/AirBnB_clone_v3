@@ -15,7 +15,7 @@ def status():
 
 @app_views.route('/stats')
 def count():
-    """retrieves the number of each objects by type
+    """Handler function to retrieve the number of each objects by type.
     """
     numtype = {"amenities": storage.count("Amenity"),
                "cities": storage.count("City"),
