@@ -14,10 +14,10 @@ def amenities():
     if request.method == 'GET':
         listamenities = []
         for amenity in storage.all("Amenity").values():
-            amenities.append(amenity.to_dict())
+            listamenities.append(amenity.to_dict())
         return jsonify(listamenities)
     if request.method == 'POST':
-        json_amenitie = request.get_json()
+        json_amenity = request.get_json()
         if json_amenity is None:
             abort(400, "Not a JSON")
         if not json_amenity.get('name'):
