@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+"""Module that starts a Flask app that handles the REST API."""
 from flask import (Flask, jsonify)
 from models import storage
 from api.v1.views import app_views
