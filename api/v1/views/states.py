@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""handles all default RestFul API actions
+"""States file
 """
 from api.v1.views import app_views
 from flask import jsonify, abort, request
@@ -12,17 +12,17 @@ def states():
     """Retrieves the list of all State objects
     """
     if request.method == 'GET':
-        states = []
+        liststate = []
         for state in storage.all("State").values():
-            states.append(state.to_dict())
-        return jsonify(states)
+            liststate.append(state.to_dict())
+        return jsonify(liststate)
     if request.method == 'POST':
-        statejson = request.get_json()
-        if statejson is None:
+        json_state = request.get_json()
+        if json_state is None:
             abort(400, "Not a JSON")
-        if not statejson.get('name'):
+        if not json_state.get('name'):
             abort(400, "Missing name")
-        state = State(**statejson)
+        state = State(**json_state)
         storage.new(state)
         storage.save()
         storage.reload()
