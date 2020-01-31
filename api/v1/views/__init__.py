@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-"""Module init
+"""Module to handle the views of the REST API using blueprints.
+
+Variables:
+    app_views (Blueprint): blueprint for the endpoints of the REST API.
 """
 from flask import Blueprint
 
