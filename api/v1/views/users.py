@@ -20,8 +20,10 @@ def users():
         json_user = request.get_json()
         if json_user is None:
             abort(400, "Not a JSON")
-        if not json_user.get('name'):
-            abort(400, "Missing name")
+        if not json_user.get('email'):
+            abort(400, "Missing email")
+        if not json_user.get('password'):
+            abort(400, "Missing password")
         user = User(**json_user)
         storage.new(user)
         storage.save()
@@ -48,7 +50,7 @@ def users_id(user_id):
         if json_user is None:
             abort(400, "Not a JSON")
         for key, value in request.get_json().items():
-            if key not in ['id', 'created_at', 'updated_at']:
+            if key not in ['id', 'created_at', 'updated_at', 'email']:
                 setattr(user, key, value)
         storage.save()
         return jsonify(user.to_dict()), 200
