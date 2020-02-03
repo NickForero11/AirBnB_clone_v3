@@ -9,7 +9,8 @@ from models.city import City
 from models.place import Place
 
 
-@app_views.route("/cities/<city_id>/places", methods=['GET', 'POST'], strict_slashes=False)
+@app_views.route("/cities/<city_id>/places", methods=['GET', 'POST'],
+                 strict_slashes=False)
 def places(city_id):
     """Retrieves the list of all places objects
     """
