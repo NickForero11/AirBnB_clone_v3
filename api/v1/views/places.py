@@ -21,7 +21,7 @@ def places(city_id):
 
     if request.method == 'GET':
         listplaces = []
-        for place in placesget:
+        for place in placesget.places:
             listplaces.append(place.to_dict())
         return jsonify(listplaces)
 
