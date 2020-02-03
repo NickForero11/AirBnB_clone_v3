@@ -18,6 +18,8 @@ import json
 import os
 import pep8
 import unittest
+from io import StringIO
+import contextlib
 FileStorage = file_storage.FileStorage
 classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
@@ -70,7 +72,7 @@ test_file_storage.py'])
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @unittest.skipIf(models.storage_t == 'db', "Testing file storage")
     def test_all_returns_dict(self):
         """Test that all returns the FileStorage.__objects attr"""
         storage = FileStorage()
@@ -114,17 +116,51 @@ class TestFileStorage(unittest.TestCase):
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
 
-     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
-    def test_dbs_get_method(self):
-        """Test get nethod"""
-        v = State(name="Pensilvaniaa")
-        v.save()
-        self.assertEqual(models.storage.get("State", v.id), v)
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
-    def test_dbs_count_method(self):
-        """test count method"""
-        num = models.storage.count("State")
-        v = State(name="Pensilvania")
-        v.save()
-        self.assertEqual(models.storage.num("State"), num + 1)
+class TestFiletorage_v3_methods(unittest.TestCase):
+    """Tests of methods added in V3 to FileStorage"""
+
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     "Testing file storage")
+    def test_file_get(self):
+        """Test for the get method to retrieve a specific model object
+        """
+        new_state = State(name="Arizona")
+        models.storage.new(new_state)
+        new_state.save()
+        first_state_id = list(models.storage.all("State").values())[0].id
+        self.assertEqual(models.storage.get(
+            "State", first_state_id).__class__.__name__, 'State')
+        fake_stdout = StringIO()
+        with contextlib.redirect_stdout(fake_stdout):
+            requested_state = models.storage.get("State", first_state_id)
+            print("First state: {}".format(requested_state))
+        output = fake_stdout.getvalue().strip()
+        self.assertIn(first_state_id, output)
+
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     "Testing file storage")
+    def test_file_count(self):
+        """Test for the count method to retrieve the number of certain or all
+        objects in FileStorage
+        """
+        self.assertIs(type(models.storage.count()), int)
+        self.assertIs(type(models.storage.count("State")), int)
+        fake_stdout = StringIO()
+        with contextlib.redirect_stdout(fake_stdout):
+            print(models.storage.count())
+        output_all = fake_stdout.getvalue().strip()
+        states_stdout = StringIO()
+        with contextlib.redirect_stdout(states_stdout):
+            print(models.storage.count("State"))
+        output_states = states_stdout.getvalue().strip()
+        self.assertTrue(output_all >= output_states)
+        storage = FileStorage()
+        size_all = len(storage.all())
+        self.assertEqual(storage.count(), size_all)
+        states_number = len(storage.all("State"))
+        self.assertEqual(storage.count("State"), states_number)
+        new_state = State()
+        new_state.save()
+        self.assertEqual(storage.count(), size_all + 1)
+        self.assertEqual(storage.count("State"), states_number + 1)
