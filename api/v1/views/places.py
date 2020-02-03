@@ -39,7 +39,7 @@ def places(city_id):
         json_place["city_id"] = city_id
         json_place["user_id"] = json_place.get("user_id")
         place = Place(**json_place)
-        storage.new(new)
+        storage.new(place)
         storage.save()
         storage.reload()
         return jsonify(place.to_dict()), 201
