@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """Module to handle the views of the REST API using blueprints.
-
 Variables:
     app_views (Blueprint): blueprint for the endpoints of the REST API.
 """
@@ -16,4 +15,3 @@ from api.v1.views.cities import *
 from api.v1.views.amenities import *
 from api.v1.views.users import *
 from api.v1 views.places import *
-from api.v1.views.places_reviews import *
